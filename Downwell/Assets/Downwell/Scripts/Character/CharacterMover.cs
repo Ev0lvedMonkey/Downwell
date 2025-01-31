@@ -19,6 +19,10 @@ public class CharacterMover : MonoBehaviour, IControllable
     private Vector2 _movementDirection;
     private bool _isGrounded;
     private bool _facingRight = true;
+    private float _fallTime = 0f; 
+
+    private const float MaxFallSpeed = -1f; 
+    private const float FallLimitDelay = 0.5f; 
 
     private void OnValidate()
     {
@@ -28,7 +32,14 @@ public class CharacterMover : MonoBehaviour, IControllable
     private void FixedUpdate()
     {
         _isGrounded = IsOnTheGround();
+
+        if (_isGrounded)
+            _fallTime = 0f; 
+        else
+            _fallTime += Time.fixedDeltaTime; 
+
         MoveInternal();
+        LimitFallSpeed();
     }
 
     public void Move(Vector2 direction)
@@ -47,9 +58,15 @@ public class CharacterMover : MonoBehaviour, IControllable
             _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpForce);
     }
 
-    public void MoveInternal()
+    private void MoveInternal()
     {
         _rigidbody.velocity = new Vector2(_movementDirection.x * _moveSpeed * Time.fixedDeltaTime, _rigidbody.velocity.y);
+    }
+
+    private void LimitFallSpeed()
+    {
+        if (_fallTime >= FallLimitDelay && _rigidbody.velocity.y < MaxFallSpeed)
+            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, MaxFallSpeed);
     }
 
     private bool IsOnTheGround()

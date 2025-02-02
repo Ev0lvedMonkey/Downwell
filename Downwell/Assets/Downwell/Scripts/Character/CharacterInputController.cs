@@ -1,11 +1,16 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+[RequireComponent(typeof(IControllable))]
 public class CharacterInputController : MonoBehaviour
 {
     private GameInput _gameInput;
     private IControllable _controllable;
 
+    private void Awake()
+    {
+        InitInput();
+    }
 
     private void Update()
     {
@@ -28,6 +33,7 @@ public class CharacterInputController : MonoBehaviour
         _gameInput = new();
         _gameInput.Enable();
     }
+
     private void ReadMove()
     {
         Vector2 inputDirection = _gameInput.Gameplay.Movement.ReadValue<Vector2>();
@@ -36,7 +42,8 @@ public class CharacterInputController : MonoBehaviour
 
     private void OnJumpPerformed(InputAction.CallbackContext context)
     {
-        _controllable.Jump();
+        if (_controllable.IsOnTheGround())
+            _controllable.Jump();
     }
 
 }

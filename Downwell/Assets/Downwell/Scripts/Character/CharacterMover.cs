@@ -1,4 +1,5 @@
 using UnityEngine;
+using static TreeEditor.TreeEditorHelper;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -17,12 +18,7 @@ public class CharacterMover : MonoBehaviour, IControllable
     [SerializeField] private Transform _groundCheckDot;
 
     private Vector2 _movementDirection;
-    private bool _isGrounded;
     private bool _facingRight = true;
-    private float _fallTime = 0f; 
-
-    private const float MaxFallSpeed = -1f; 
-    private const float FallLimitDelay = 0.5f; 
 
     private void OnValidate()
     {
@@ -31,47 +27,56 @@ public class CharacterMover : MonoBehaviour, IControllable
 
     private void FixedUpdate()
     {
-        _isGrounded = IsOnTheGround();
-
-        if (_isGrounded)
-            _fallTime = 0f; 
-        else
-            _fallTime += Time.fixedDeltaTime; 
-
         MoveInternal();
-        LimitFallSpeed();
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.TryGetComponent(out PlatformTrigger platform))
+        {
+            _rigidbody.bodyType = RigidbodyType2D.Kinematic;
+            _rigidbody.velocity = new(_rigidbody.velocity.x, 0);
+            _rigidbody.bodyType = RigidbodyType2D.Dynamic;
+            Debug.Log($"velocity zero");
+        }
     }
 
     public void Move(Vector2 direction)
     {
         _movementDirection = direction;
 
-        if (direction.x > 0 && !_facingRight)
+        if (_movementDirection.x > 0 && !_facingRight)
             Flip();
-        else if (direction.x < 0 && _facingRight)
+        else if (_movementDirection.x < 0 && _facingRight)
             Flip();
     }
 
     public void Jump()
     {
-        if (_isGrounded)
-            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpForce);
+        _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpForce);
+    }
+
+    public bool IsOnTheGround()
+    {
+        return Physics2D.OverlapCircle(_groundCheckDot.position, _checkSphereRaduis, _groundMask) != null;
     }
 
     private void MoveInternal()
     {
-        _rigidbody.velocity = new Vector2(_movementDirection.x * _moveSpeed * Time.fixedDeltaTime, _rigidbody.velocity.y);
+        if (IsTouchingWall())
+            return;
+        _rigidbody.velocity =
+            new(_movementDirection.x * _moveSpeed * Time.fixedDeltaTime, _rigidbody.velocity.y);
+
     }
 
-    private void LimitFallSpeed()
+    private bool IsTouchingWall()
     {
-        if (_fallTime >= FallLimitDelay && _rigidbody.velocity.y < MaxFallSpeed)
-            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, MaxFallSpeed);
-    }
+        float direction = _facingRight ? 1f : -1f;
+        Vector2 origin = transform.position;
+        float distance = 0.1f;
 
-    private bool IsOnTheGround()
-    {
-        return Physics2D.OverlapCircle(_groundCheckDot.position, _checkSphereRaduis, _groundMask) != null;
+        return Physics2D.Raycast(origin, Vector2.right * direction, distance, _groundMask);
     }
 
     private void Flip()

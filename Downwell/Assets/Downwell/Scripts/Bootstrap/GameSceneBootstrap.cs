@@ -6,6 +6,6 @@ public class GameSceneBootstrap : MonoBehaviour
 
     private void Awake()
     {
-        _characterInputController.InitInput();
+        //_characterInputController.InitInput();
     }
 }

@@ -7,17 +7,12 @@ public class CharacterInputController : MonoBehaviour
     private GameInput _gameInput;
     private IControllable _controllable;
 
-    private void Awake()
-    {
-        InitInput();
-    }
-
     private void Update()
     {
         ReadMove();
     }
 
-    private void OnEnable()
+    private void Start()
     {
         _gameInput.Gameplay.Jump.performed += OnJumpPerformed;
     }
@@ -27,7 +22,7 @@ public class CharacterInputController : MonoBehaviour
         _gameInput.Gameplay.Jump.performed -= OnJumpPerformed;
     }
 
-    public void InitInput()
+    public void Init()
     {
         _controllable = GetComponent<IControllable>();
         _gameInput = new();

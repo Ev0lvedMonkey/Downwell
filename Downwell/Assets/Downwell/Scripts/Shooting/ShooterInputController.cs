@@ -1,5 +1,4 @@
-﻿using System;
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.InputSystem;
 
 [RequireComponent(typeof(BaseShooter))]
@@ -10,11 +9,6 @@ public class ShooterInputController : MonoBehaviour
     private BaseShooter _shooter;
     private GameInput _gameInput;
 
-    private void Awake()
-    {
-        Init();
-    }
-
     public void Init()
     {
         _controllable = GetComponent<IControllable>();
@@ -24,7 +18,7 @@ public class ShooterInputController : MonoBehaviour
         _shooter.Init(_controllable);
     }
 
-    private void OnEnable()
+    private void Start()
     {
         _gameInput.Gameplay.Shot.performed += Shot;
     }

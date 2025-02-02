@@ -1,3 +1,4 @@
+using R3;
 using UnityEngine;
 using static TreeEditor.TreeEditorHelper;
 
@@ -17,6 +18,7 @@ public class CharacterMover : MonoBehaviour, IControllable
     [SerializeField, Range(0.1f, 2f)] private float _checkSphereRaduis;
     [SerializeField] private Transform _groundCheckDot;
 
+    private StreamBus _streamBus;
     private Vector2 _movementDirection;
     private bool _facingRight = true;
 
@@ -34,10 +36,9 @@ public class CharacterMover : MonoBehaviour, IControllable
     {
         if (collision.TryGetComponent(out PlatformTrigger platform))
         {
-            _rigidbody.bodyType = RigidbodyType2D.Kinematic;
-            _rigidbody.velocity = new(_rigidbody.velocity.x, 0);
-            _rigidbody.bodyType = RigidbodyType2D.Dynamic;
-            Debug.Log($"velocity zero");
+            _streamBus ??= ServiceLocator.Current.Get<StreamBus>();
+            _streamBus.OnFellToGroundEvent.OnNext(Unit.Default);
+            StopTheFall();
         }
     }
 
@@ -51,9 +52,19 @@ public class CharacterMover : MonoBehaviour, IControllable
             Flip();
     }
 
-    public void Jump()
+    public void Jump(float force = 0)
     {
-        _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpForce);
+        if (force == 0)
+            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, _jumpForce);
+        else
+            _rigidbody.velocity = new Vector2(_rigidbody.velocity.x, force);
+    }
+
+    private void StopTheFall()
+    {
+        _rigidbody.bodyType = RigidbodyType2D.Kinematic;
+        _rigidbody.velocity = new(_rigidbody.velocity.x, 0);
+        _rigidbody.bodyType = RigidbodyType2D.Dynamic;
     }
 
     public bool IsOnTheGround()
@@ -86,4 +97,5 @@ public class CharacterMover : MonoBehaviour, IControllable
         scale.x *= -1;
         transform.localScale = scale;
     }
+
 }

@@ -4,6 +4,7 @@ public class GameSceneBootstrap : MonoBehaviour
 {
     [SerializeField] private CharacterBootstrap _characterBootstrap;
     [SerializeField] private ClipView _clipView;
+    [SerializeField] private HealthView _healthView;
 
     private StreamBus _streamBus;
 
@@ -18,7 +19,8 @@ public class GameSceneBootstrap : MonoBehaviour
     private void RegistryServices()
     {
         ServiceLocator.Inizialize();
-        ServiceLocator.Current.Register(_clipView);   
         ServiceLocator.Current.Register(_streamBus);   
+        ServiceLocator.Current.Register(_clipView);   
+        ServiceLocator.Current.Register(_healthView);   
     }
 }

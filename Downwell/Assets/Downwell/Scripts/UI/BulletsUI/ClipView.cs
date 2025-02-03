@@ -1,13 +1,15 @@
 using R3;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class ClipView : MonoBehaviour, IService
 {
     [SerializeField] private Transform _bulletsHolder;
     [SerializeField] private BulletView _bulletPrefab;
+    [SerializeField] private TextMeshProUGUI _bulletsText;
 
-    private readonly ReactiveProperty<int> _bulletsCount = new();
+    private readonly ReactiveProperty<int> BulletsCount = new();
     private readonly List<BulletView> _bulletsList = new();
     private int _maxBulletsCount;
     private float _bulletHeight;
@@ -24,8 +26,10 @@ public class ClipView : MonoBehaviour, IService
         _streamBus = ServiceLocator.Current.Get<StreamBus>();
         _streamBus.OnShotEvent.Subscribe(_ => ReduceBullet());
         _streamBus.OnFellToGroundEvent.Subscribe(_ => Reload());
-        _bulletsCount.Skip(1).Subscribe(_ => UpdateUI());
-        _bulletsCount.Subscribe(value => _bulletsCount.Value = Mathf.Clamp(value, 0, _maxBulletsCount));
+        BulletsCount.Skip(1).Subscribe(_ => UpdateUI());
+        BulletsCount.Skip(1).Subscribe(_ => _bulletsText.text = $"{BulletsCount.Value}");
+
+        BulletsCount.Subscribe(value => BulletsCount.Value = Mathf.Clamp(value, 0, _maxBulletsCount));
     }
 
     public void SetMaxBulletsCount(int maxBulletsCount)
@@ -35,13 +39,13 @@ public class ClipView : MonoBehaviour, IService
         Reload();
     }
 
-    public void Reload() => _bulletsCount.Value = _maxBulletsCount;
-    public void ReduceBullet() => _bulletsCount.Value--;
+    public void Reload() => BulletsCount.Value = _maxBulletsCount;
+    public void ReduceBullet() => BulletsCount.Value--;
 
     private void UpdateUI()
     {
         ClearBullets();
-        for (int i = 0; i < _bulletsCount.Value; i++)
+        for (int i = 0; i < BulletsCount.Value; i++)
         {
             var bullet = Instantiate(_bulletPrefab, _bulletsHolder);
             bullet.SetSize(_bulletHeight);

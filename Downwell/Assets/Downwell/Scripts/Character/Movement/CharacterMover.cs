@@ -1,6 +1,5 @@
 using R3;
 using UnityEngine;
-using static TreeEditor.TreeEditorHelper;
 
 [RequireComponent(typeof(Rigidbody2D))]
 [RequireComponent(typeof(Collider2D))]
@@ -14,9 +13,12 @@ public class CharacterMover : MonoBehaviour, IControllable
 
     [Header("Jump Properties")]
     [SerializeField, Range(1f, 5f)] private float _jumpForce;
-    [SerializeField] private LayerMask _groundMask;
     [SerializeField, Range(0.1f, 2f)] private float _checkSphereRaduis;
+    [SerializeField] private LayerMask _groundMask;
     [SerializeField] private Transform _groundCheckDot;
+
+    [Header("Fall Properties")]
+    [SerializeField] private LayerMask _wallMask;
 
     private StreamBus _streamBus;
     private Vector2 _movementDirection;
@@ -34,7 +36,7 @@ public class CharacterMover : MonoBehaviour, IControllable
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out PlatformTrigger platform))
+        if (collision.TryGetComponent(out Platform platform))
         {
             _streamBus ??= ServiceLocator.Current.Get<StreamBus>();
             _streamBus.OnFellToGroundEvent.OnNext(Unit.Default);
@@ -87,7 +89,7 @@ public class CharacterMover : MonoBehaviour, IControllable
         Vector2 origin = transform.position;
         float distance = 0.1f;
 
-        return Physics2D.Raycast(origin, Vector2.right * direction, distance, _groundMask);
+        return Physics2D.Raycast(origin, Vector2.right * direction, distance, _wallMask);
     }
 
     private void Flip()

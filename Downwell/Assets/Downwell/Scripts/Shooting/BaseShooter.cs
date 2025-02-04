@@ -1,50 +1,91 @@
 ﻿using R3;
+using System.Collections.Generic;
 using UnityEngine;
-using static UnityEngine.InputSystem.LowLevel.InputStateHistory;
 
-public abstract class BaseShooter : MonoBehaviour, IShooter
+public enum WeaponType
 {
-    [Header("Shot Properties")]
-    [SerializeField, Range(1, 10)] protected int _clipVolume;
-    [SerializeField, Range(1, 10)] protected float _repulsiveForce;
-    [SerializeField, Range(1, 10)] protected int _bulletsCountByShot;
-    [SerializeField, Range(0, 45)] protected float _bulletLeftOffest;
-    [SerializeField, Range(0, 45)] protected float _bulletRightOffest;
+    Simple,
+    Shotgun,
+    Lazer,
+    ExtraSimple,
+    ThirdBullet
+}
 
+public class BaseShooter : MonoBehaviour, IShooter
+{
+    [Header("Components")]
+    [SerializeField] private Transform _shotPostion;
+
+    private const string MainPath = "Configs/";
     private IControllable _controllable;
     private StreamBus _streamBus;
     private ClipView _clipView;
+    private WeaponConfig _weaponConfig;
     protected int _bulletsCount;
+
+    private Dictionary<WeaponType, WeaponConfig> _weaponDicitionry;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.TryGetComponent(out PlatformTrigger platform))
-        {
+        if (collision.TryGetComponent(out Platform platform))
             Reload();
-        }
     }
 
-    public virtual void Init(IControllable controllable)
+    public void Init(IControllable controllable)
     {
+        _weaponDicitionry = new()
+            {
+                {WeaponType.Simple, Resources.Load<WeaponConfig>($"{MainPath}SimpleWeaponConfig")},
+                {WeaponType.Shotgun, Resources.Load<WeaponConfig>($"{MainPath}ShotgunWeaponConfig")},
+                {WeaponType.Lazer, Resources.Load<WeaponConfig>($"{MainPath}LazerWeaponConfig")},
+                {WeaponType.ThirdBullet, Resources.Load<WeaponConfig>($"{MainPath}{WeaponType.ThirdBullet}WeaponConfig")}
+            };
         _streamBus = ServiceLocator.Current.Get<StreamBus>();
         _clipView = ServiceLocator.Current.Get<ClipView>();
-        _clipView.SetMaxBulletsCount(_clipVolume);
         _controllable = controllable;
+        SetNewWeapon(WeaponType.Lazer);
         Reload();
     }
 
-    public virtual void Reload()
+    public void SetNewWeapon(WeaponType weaponType)
     {
-        _bulletsCount = _clipVolume;
+        if (!_weaponDicitionry.TryGetValue(weaponType, out _weaponConfig) || _weaponConfig == null)
+        {
+            Debug.LogError($"[BaseShooter] WeaponConfig not found or failed to load for {weaponType}");
+            return;
+        }
+
+        _weaponConfig = _weaponDicitionry[weaponType];
+        _clipView.SetMaxBulletsCount(_weaponConfig.ClipVolume);
+        Debug.Log($"[BaseShooter] Switched to weapon: {weaponType}");
     }
 
-    public virtual void Shot()
+
+    public void Reload()
     {
-        if (_bulletsCount < 0)
+        _bulletsCount = _weaponConfig.ClipVolume;
+    }
+
+    public void Shot()
+    {
+        if (_bulletsCount <= 0)
             return;
-        _controllable.Jump(_repulsiveForce);
+        UniqShot();
+        _controllable.Jump(_weaponConfig.RepulsiveForce);
         _bulletsCount--;
         _streamBus.OnShotEvent.OnNext(Unit.Default);
+    }
+
+    private void UniqShot()
+    {
+        for (int i = 0; i < _weaponConfig.BulletsCountByShot; i++)
+        {
+            float randomOffset = Random.Range(-_weaponConfig.BulletLeftOffest, _weaponConfig.BulletRightOffest);
+            Quaternion bulletRotation = Quaternion.Euler(0, 0, randomOffset);
+
+            Bullet bullet = Instantiate(_weaponConfig.BulletPrefab, _shotPostion.position, bulletRotation);
+            bullet.Init(_weaponConfig.BulletSpeed, bulletRotation * Vector3.down);
+        }
     }
 }
 

@@ -19,10 +19,14 @@ public class HitscanBullet : Bullet
         if (hit.collider != null)
         {
             endPoint = hit.point;
-            Debug.Log($"HitscanBullet hit {hit.collider.name} at {hit.point}");
 
-            var damageable = hit.collider.GetComponent<IDamageable>();
-            damageable?.TakeDamage(10);
+            if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
+            {
+                damageable.TakeDamage(Constants.BulletDamage);
+                Debug.Log($"Hitscan");
+            }
+            else
+                Debug.Log($"No");
         }
 
         DrawLine(startPoint, endPoint);

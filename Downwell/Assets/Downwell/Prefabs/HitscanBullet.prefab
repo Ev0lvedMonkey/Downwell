@@ -48,7 +48,7 @@ MonoBehaviour:
   _maxDistance: 30
   _hitLayer:
     serializedVersion: 2
-    m_Bits: 192
+    m_Bits: 704
   _lineRenderer: {fileID: 4156977617128297766}
   _lineDuration: 0.1
 --- !u!120 &4156977617128297766

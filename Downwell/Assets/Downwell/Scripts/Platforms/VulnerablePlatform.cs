@@ -9,7 +9,7 @@ public class VulnerablePlatform : Platform, IDamageable
 
     protected override void SetLayer()
     {
-        gameObject.layer = LayerMask.NameToLayer(StringConstants.VulnerablePlatformLayerName);
+        gameObject.layer = LayerMask.NameToLayer(Constants.VulnerablePlatformLayerName);
     }
 }
 

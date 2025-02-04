@@ -11,7 +11,7 @@ namespace Assets.Downwell.Scripts.Platforms
     {
         protected override void SetLayer()
         {
-            gameObject.layer = LayerMask.NameToLayer(StringConstants.GroundayerName);
+            gameObject.layer = LayerMask.NameToLayer(Constants.GroundayerName);
 
         }
     }

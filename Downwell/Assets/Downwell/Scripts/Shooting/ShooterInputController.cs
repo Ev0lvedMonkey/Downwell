@@ -8,6 +8,7 @@ public class ShooterInputController : MonoBehaviour
     private IControllable _controllable;
     private BaseShooter _shooter;
     private GameInput _gameInput;
+    private bool _isShooting;
 
     public void Init()
     {
@@ -20,19 +21,31 @@ public class ShooterInputController : MonoBehaviour
 
     private void Start()
     {
-        _gameInput.Gameplay.Shot.performed += Shot;
+        _gameInput.Gameplay.Shot.performed += StartShooting;
+        _gameInput.Gameplay.Shot.canceled += StopShooting;
     }
 
     private void OnDisable()
     {
-        _gameInput.Gameplay.Shot.performed -= Shot;
+        _gameInput.Gameplay.Shot.performed -= StartShooting;
+        _gameInput.Gameplay.Shot.canceled -= StopShooting;
     }
 
-    private void Shot(InputAction.CallbackContext context)
+    private void StartShooting(InputAction.CallbackContext context)
     {
         if (_controllable.IsOnTheGround())
             return;
-        _shooter.Shot();
+        _isShooting = true;
+    }
+
+    private void StopShooting(InputAction.CallbackContext context)
+    {
+        _isShooting = false;
+    }
+
+    private void Update()
+    {
+        if (_isShooting)
+            _shooter.Shot();
     }
 }
-

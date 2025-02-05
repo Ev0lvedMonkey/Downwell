@@ -22,6 +22,7 @@ public class BaseShooter : MonoBehaviour, IShooter
     private ClipView _clipView;
     private WeaponConfig _weaponConfig;
     protected int _bulletsCount;
+    private float _nextShotTime;
 
     private Dictionary<WeaponType, WeaponConfig> _weaponDicitionry;
 
@@ -43,7 +44,7 @@ public class BaseShooter : MonoBehaviour, IShooter
         _streamBus = ServiceLocator.Current.Get<StreamBus>();
         _clipView = ServiceLocator.Current.Get<ClipView>();
         _controllable = controllable;
-        SetNewWeapon(WeaponType.Lazer);
+        SetNewWeapon(WeaponType.Simple);
         Reload();
     }
 
@@ -68,13 +69,19 @@ public class BaseShooter : MonoBehaviour, IShooter
 
     public void Shot()
     {
-        if (_bulletsCount <= 0)
+        if (_controllable.IsOnTheGround())
             return;
+        if (_bulletsCount <= 0 || Time.time < _nextShotTime)
+            return;
+
         UniqShot();
         _controllable.Jump(_weaponConfig.RepulsiveForce);
         _bulletsCount--;
         _streamBus.OnShotEvent.OnNext(Unit.Default);
+
+        _nextShotTime = Time.time + _weaponConfig.FireRate;
     }
+
 
     private void UniqShot()
     {
@@ -84,7 +91,7 @@ public class BaseShooter : MonoBehaviour, IShooter
             Quaternion bulletRotation = Quaternion.Euler(0, 0, randomOffset);
 
             Bullet bullet = Instantiate(_weaponConfig.BulletPrefab, _shotPostion.position, bulletRotation);
-            bullet.Init(_weaponConfig.BulletSpeed, bulletRotation * Vector3.down);
+            bullet.Init(_weaponConfig.BulletSpeed, _weaponConfig.BulletLifeTime, bulletRotation * Vector3.down);
         }
     }
 }

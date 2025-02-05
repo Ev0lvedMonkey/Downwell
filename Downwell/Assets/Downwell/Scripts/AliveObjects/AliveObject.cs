@@ -13,13 +13,13 @@ public abstract class AliveObject : MonoBehaviour, IAlive
         _disposables.Dispose();
     }
 
-    public void TakeDamage(int damage)
+    public virtual void TakeDamage(int damage)
     {
         AliveObjectHealthPoint.Value -= damage;
         AliveObjectHealthPoint.Value = Mathf.Clamp(AliveObjectHealthPoint.Value, IAlive.MinHealthPoint, IAlive.MaxHealthPoint);
     }
 
-    public void Die()
+    public virtual void Die()
     {
         Debug.Log($"{gameObject.name} bro died");
     }

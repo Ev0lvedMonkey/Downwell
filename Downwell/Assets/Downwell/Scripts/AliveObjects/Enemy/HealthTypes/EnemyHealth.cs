@@ -15,5 +15,11 @@ public abstract class EnemyHealth : AliveObject
         gameObject.layer = LayerMask.NameToLayer(Constants.EnemyLayerName);
         base.Init();
     }
+
+    public override void Die()
+    {
+        base.Die();
+        Destroy(gameObject);
+    }
 }
 

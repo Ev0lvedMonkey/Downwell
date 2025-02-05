@@ -2,10 +2,10 @@
 
 public class ProjectileBullet : Bullet
 {
-    public override void Init(float speed, Vector3 direction)
+    public override void Init(float speed, float bulletLifeTime, Vector3 direction)
     {
-        base.Init(speed, direction);
-        Destroy(gameObject, BulletLifeTime);
+        base.Init(speed, bulletLifeTime, direction);
+        Destroy(gameObject, _bulletLifeTime);
     }
 
     private void Update()

@@ -14,8 +14,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _clipVolume: 6
   _repulsiveForce: 1.5
+  _fireRate: 0.1
   _bulletsCountByShot: 3
   _bulletLeftOffest: 10
   _bulletRightOffest: 10
-  _bulletSpeed: 0
   _bulletPrefab: {fileID: 5067297712191381959, guid: 3def2154b86c152418a0c3fb598eaaca, type: 3}
+  _bulletSpeed: 1
+  _bulletLifeTime: 0.5

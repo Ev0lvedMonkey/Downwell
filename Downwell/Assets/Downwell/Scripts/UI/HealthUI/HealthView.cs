@@ -15,7 +15,7 @@ public class HealthView : MonoBehaviour, IService
         _maxHealth = Mathf.Clamp(_maxHealth, IAlive.MinHealthPoint, IAlive.MaxHealthPoint);  
     }
 
-    public void UpdateUI(int healthAmount)
+    public void UpdateUI(float healthAmount)
     {
         float fillAmount = Mathf.Clamp01((float)healthAmount / _maxHealth);
         _healthBarFill.fillAmount = fillAmount;

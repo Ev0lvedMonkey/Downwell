@@ -7,9 +7,9 @@ public class HitscanBullet : Bullet
     [SerializeField] private LineRenderer _lineRenderer;
     [SerializeField] private float _lineDuration = 0.1f;
 
-    public override void Init(float speed, float bulletLifeTime, Vector3 direction)
+    public override void Init(float speed, float bulletDamage, float bulletLifeTime, Vector3 direction)
     {
-        base.Init(speed, bulletLifeTime, direction);
+        base.Init(speed, bulletDamage, bulletLifeTime, direction);
         Vector3 startPoint = transform.position;
         Vector3 endPoint = startPoint + direction.normalized * _maxDistance;
 
@@ -21,7 +21,7 @@ public class HitscanBullet : Bullet
 
             if (hit.collider.TryGetComponent<IDamageable>(out var damageable))
             {
-                damageable.TakeDamage(Constants.BulletDamage);
+                damageable.TakeDamage(_bulletDamage);
                 Debug.Log($"Hitscan");
             }
             else
@@ -30,7 +30,9 @@ public class HitscanBullet : Bullet
 
         DrawLine(startPoint, endPoint);
         Destroy(gameObject, _lineDuration);
+
     }
+
 
 
     private void DrawLine(Vector3 start, Vector3 end)

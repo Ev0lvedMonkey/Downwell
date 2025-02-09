@@ -1470,7 +1470,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 72e8a99c12323f34691b427a321f47f0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _defaultHealth: 5
+  _defaultHealth: 3
 --- !u!212 &880544176
 SpriteRenderer:
   m_ObjectHideFlags: 0
@@ -2433,7 +2433,7 @@ Transform:
   m_GameObject: {fileID: 1431272831}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 30.4, z: 0}
+  m_LocalPosition: {x: 0.44, y: 30.29, z: 0}
   m_LocalScale: {x: 0.8, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -2600,6 +2600,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aa8496390cf25384dac22a7239a172c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _defaultWeaponType: 0
   _shotPostion: {fileID: 116971770}
 --- !u!114 &1431272843
 MonoBehaviour:

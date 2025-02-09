@@ -15,20 +15,24 @@ public class UniversalEnemyHealth : EnemyHealth
     private void HandleCollisionDamage(Collision2D collision)
     {
         Transform collisionTransform = collision.transform;
-
-        if (!collisionTransform.TryGetComponent(out CharacterHealth character) &&
-                    !collisionTransform.TryGetComponent(out Bullet bullet))
-            return;
-
-        ContactPoint2D contact = collision.contacts[0];
-        float normalY = contact.normal.y;
-
-        TakeDamage(Constants.BulletDamage);
-        if (normalY > -0.5f)
+        if (collisionTransform.TryGetComponent(out Bullet bullet))
         {
-            Debug.LogWarning($"Снизу");
-            if (character != null)
-                character.TakeDamage(1);
+            TakeDamage(bullet.GetDamage());
+            return;
+        }
+
+        if (collisionTransform.TryGetComponent(out CharacterHealth character))
+        {
+            ContactPoint2D contact = collision.contacts[0];
+            float normalY = contact.normal.y;
+
+            if (normalY > -0.5f)
+            {
+                Debug.LogWarning($"Снизу");
+                if (character != null)
+                    character.TakeDamage(1);
+            }
+            TakeDamage(_defaultHealth);
         }
 
     }

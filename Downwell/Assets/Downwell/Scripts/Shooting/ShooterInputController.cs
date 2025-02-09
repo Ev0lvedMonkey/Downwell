@@ -5,14 +5,14 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(IControllable))]
 public class ShooterInputController : MonoBehaviour
 {
-    private IControllable _controllable;
+    private CharacterMover _controllable;
     private BaseShooter _shooter;
     private GameInput _gameInput;
     private bool _isShooting;
 
     public void Init()
     {
-        _controllable = GetComponent<IControllable>();
+        _controllable = GetComponent<CharacterMover>();
         _shooter = GetComponent<BaseShooter>();
         _gameInput = new();
         _gameInput.Enable();

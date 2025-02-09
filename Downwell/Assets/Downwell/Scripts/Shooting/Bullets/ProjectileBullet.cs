@@ -1,10 +1,11 @@
 ﻿using UnityEngine;
 
+[RequireComponent(typeof(Collider2D))]
 public class ProjectileBullet : Bullet
 {
-    public override void Init(float speed, float bulletLifeTime, Vector3 direction)
+    public override void Init(float speed, float bulletDamage, float bulletLifeTime, Vector3 direction)
     {
-        base.Init(speed, bulletLifeTime, direction);
+        base.Init(speed, bulletDamage, bulletLifeTime, direction);
         Destroy(gameObject, _bulletLifeTime);
     }
 

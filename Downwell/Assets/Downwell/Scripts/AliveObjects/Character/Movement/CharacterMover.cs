@@ -22,7 +22,7 @@ public class CharacterMover : MonoBehaviour, IControllable
 
     private StreamBus _streamBus;
     private Vector2 _movementDirection;
-    private bool _facingRight = true;
+    public bool FacingRight { get; private set; } = true;
 
     private void OnValidate()
     {
@@ -48,9 +48,9 @@ public class CharacterMover : MonoBehaviour, IControllable
     {
         _movementDirection = direction;
 
-        if (_movementDirection.x > 0 && !_facingRight)
+        if (_movementDirection.x > 0 && !FacingRight)
             Flip();
-        else if (_movementDirection.x < 0 && _facingRight)
+        else if (_movementDirection.x < 0 && FacingRight)
             Flip();
     }
 
@@ -85,7 +85,7 @@ public class CharacterMover : MonoBehaviour, IControllable
 
     private bool IsTouchingWall()
     {
-        float direction = _facingRight ? 1f : -1f;
+        float direction = FacingRight ? 1f : -1f;
         Vector2 origin = transform.position;
         float distance = 0.1f;
 
@@ -94,7 +94,7 @@ public class CharacterMover : MonoBehaviour, IControllable
 
     private void Flip()
     {
-        _facingRight = !_facingRight;
+        FacingRight = !FacingRight;
         Vector3 scale = transform.localScale;
         scale.x *= -1;
         transform.localScale = scale;

@@ -3,7 +3,7 @@ using UnityEngine;
 
 public abstract class AliveObject : MonoBehaviour, IAlive
 {
-    public readonly ReactiveProperty<int> AliveObjectHealthPoint = new();
+    public readonly ReactiveProperty<float> AliveObjectHealthPoint = new();
     public ReadOnlyReactiveProperty<bool> AliveObjectDie;
 
     protected DisposableBag _disposables = new();
@@ -13,7 +13,7 @@ public abstract class AliveObject : MonoBehaviour, IAlive
         _disposables.Dispose();
     }
 
-    public virtual void TakeDamage(int damage)
+    public virtual void TakeDamage(float damage)
     {
         AliveObjectHealthPoint.Value -= damage;
         AliveObjectHealthPoint.Value = Mathf.Clamp(AliveObjectHealthPoint.Value, IAlive.MinHealthPoint, IAlive.MaxHealthPoint);

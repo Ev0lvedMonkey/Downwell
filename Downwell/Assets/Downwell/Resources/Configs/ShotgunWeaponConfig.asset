@@ -12,6 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d3d4e828625597149a8d2bd6593b12e5, type: 3}
   m_Name: ShotgunWeaponConfig
   m_EditorClassIdentifier: 
+  _weaponType: 3
   _clipVolume: 6
   _repulsiveForce: 1.5
   _fireRate: 0.1
@@ -19,5 +20,6 @@ MonoBehaviour:
   _bulletLeftOffest: 10
   _bulletRightOffest: 10
   _bulletPrefab: {fileID: 5067297712191381959, guid: 3def2154b86c152418a0c3fb598eaaca, type: 3}
-  _bulletSpeed: 1
-  _bulletLifeTime: 0.5
+  _bulletSpeed: 25
+  _bulletLifeTime: 0.8
+  _bulletDamage: 0.5

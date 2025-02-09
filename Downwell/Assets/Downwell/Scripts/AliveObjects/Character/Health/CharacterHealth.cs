@@ -5,20 +5,21 @@ using UnityEngine;
 public class CharacterHealth : AliveObject, IHealable
 {
     [Header("Invulnerability Duration")]
-    [SerializeField, Range(0.5f, 5f)] private float _invulnerabilityDuration;
+    [SerializeField, Range(0.5f, 5f)] private float _baseInvulnerabilityDuration;
 
     private const int DefaultMaxHPCount = 4;
     private bool _isInvulnerable;
     private int _currentMaxHealth;
+    private float _currentInvulnerabilityDuration;
     private HealthView _healthView;
 
-    public override void TakeDamage(int damage)
+    public override void TakeDamage(float damage)
     {
         if (_isInvulnerable)
             return;
 
         base.TakeDamage(damage);
-        ActivateInvulnerability(_invulnerabilityDuration);
+        ActivateInvulnerability();
     }
 
     public void TakeHeal(int healthPoint)
@@ -41,22 +42,35 @@ public class CharacterHealth : AliveObject, IHealable
     {
         _healthView = ServiceLocator.Current.Get<HealthView>();
         _currentMaxHealth = DefaultMaxHPCount;
+        _currentInvulnerabilityDuration = _baseInvulnerabilityDuration;
         SetDefaultHealth(_currentMaxHealth);
         _healthView.SetMaxHealth(_currentMaxHealth);
         AliveObjectHealthPoint.Subscribe(_healthView.UpdateUI).AddTo(ref _disposables);
         base.Init();
     }
 
-    public void ActivateInvulnerability(float duration)
+    public void ActivateInvulnerability()
     {
         if (!_isInvulnerable)
-            StartCoroutine(InvulnerabilityCoroutine(duration));
+            StartCoroutine(InvulnerabilityCoroutine());
     }
 
-    private IEnumerator InvulnerabilityCoroutine(float duration)
+    private IEnumerator InvulnerabilityCoroutine()
     {
         _isInvulnerable = true;
-        yield return new WaitForSeconds(duration);
+        yield return new WaitForSeconds(_currentInvulnerabilityDuration);
         _isInvulnerable = false;
+    }
+
+    public void IncreaseInvulnerabilityTime(float amount)
+    {
+        _currentInvulnerabilityDuration += amount;
+        Debug.Log($"[CharacterHealth] Invulnerability time increased by {amount}. New duration: {_currentInvulnerabilityDuration}");
+    }
+
+    public void ResetInvulnerabilityTime()
+    {
+        _currentInvulnerabilityDuration = _baseInvulnerabilityDuration;
+        Debug.Log("[CharacterHealth] Invulnerability time reset to default.");
     }
 }

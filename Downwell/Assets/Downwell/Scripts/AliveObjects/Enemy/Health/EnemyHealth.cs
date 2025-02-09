@@ -2,7 +2,7 @@
 
 public abstract class EnemyHealth : AliveObject
 {
-    [SerializeField, Range(1, 5)] private int _defaultHealth;
+    [SerializeField, Range(1, 5)] protected int _defaultHealth;
 
     private void Awake()
     {

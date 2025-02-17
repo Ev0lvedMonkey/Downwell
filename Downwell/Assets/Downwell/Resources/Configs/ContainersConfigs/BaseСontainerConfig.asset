@@ -1,0 +1,28 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1321284e543c35a4380268899871e6bf, type: 3}
+  m_Name: "Base\u0421ontainerConfig"
+  m_EditorClassIdentifier: 
+  _allContainers:
+  - {fileID: -880280254939210487, guid: 5d19ba4483201fd41b4d5180d25c0d69, type: 3}
+  - {fileID: -880280254939210487, guid: 7cfdab6451b890b418221c6ec56d2bfe, type: 3}
+  - {fileID: -880280254939210487, guid: 02e35cbd08195324ca0dc012f311b75e, type: 3}
+  - {fileID: -880280254939210487, guid: 1bec714bb8baddd489f07411fc61048c, type: 3}
+  - {fileID: -880280254939210487, guid: 09d7334acdc63474abec46209e69696d, type: 3}
+  - {fileID: -880280254939210487, guid: 2da8c655062259c41a0a0e665931ace0, type: 3}
+  - {fileID: -880280254939210487, guid: 4e933f61de9678c4b8b8dc405f64c1f8, type: 3}
+  - {fileID: -880280254939210487, guid: ae845a7fedeb668489f95f45c6d709b7, type: 3}
+  - {fileID: -880280254939210487, guid: 56cfbcfa1d25542499f4ac1fa28bea05, type: 3}
+  - {fileID: -880280254939210487, guid: 7c1f2638f06c4cc4bbc94eda043f949d, type: 3}
+  - {fileID: -880280254939210487, guid: 7af3a860c542b6a49b2fddaf129932a0, type: 3}
+  - {fileID: -880280254939210487, guid: 8ee5b3d8bf61ff346b4d0f1ea908210f, type: 3}
+  _spawnStep: 10

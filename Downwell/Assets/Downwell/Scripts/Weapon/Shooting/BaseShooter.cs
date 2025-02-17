@@ -22,7 +22,7 @@ public class BaseShooter : MonoBehaviour, IShooter
     [Header("Components")]
     [SerializeField] private Transform _shotPostion;
 
-    private const string MainPath = "Configs/";
+    private const string MainPath = "Configs/WeaponConfigs/";
     private CharacterMover _controllable;
     private StreamBus _streamBus;
     private ClipView _clipView;
